@@ -31,7 +31,9 @@ sensor:
     departures:
       - name: "Hohenzollernplatz" # exact name of the station, used to find it
       - name: "Barbarastraße" # you can add more that one stop to track
-        walking_time: 5 # Optional parameter with value in minutes that hide transport closer than N minutes
+        
+        # Optional parameter with value in minutes that hide transport closer than N minutes
+        # walking_time: 5
 ```
 
 **4.** Restart Home Assistant core again and you should now see two new entities (however, it may take some time for them to fetch new data). If you don't see anything new — check the logs (Settings -> System -> Logs). Some error should pop up there.
