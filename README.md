@@ -32,7 +32,7 @@ sensor:
       - name: "Hohenzollernplatz" # exact name of the station, used to find it
       - name: "Barbarastraße" # you can add more that one stop to track
         
-        # Optional parameter with value in minutes that hide transport closer than N minutes
+        # Optional parameter with value in minutes to hide transport sooner than N minutes
         # walking_time: 5
 ```
 
@@ -51,7 +51,7 @@ When sensor component is installed and working you can add the new fancy widget 
 **4.** Now you can add the custom card and integrate it with your sensor. Click "Add card -> Manual" or just go to "Raw configuration editor" and use this config.
 
 ```yaml
-- type: custom:berlin-transport-timetable-card
+- type: custom:munich-transport-timetable-card
   show_stop_name: true # show or hide the name of your stop in card title
   max_entries: 8 # number of upcoming departures to show (max: 10)
   entities:
