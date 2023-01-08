@@ -54,6 +54,7 @@ When sensor component is installed and working you can add the new fancy widget 
 type: custom:munich-transport-timetable-card
 show_stop_name: true # show or hide the name of your stop in card title
 max_entries: 8 # number of upcoming departures to show (max: 10)
+direction_name_max_length: 25 # optional: max length of displayed direction names (default: 30) 
 entities:
 - sensor.hohenzollernplatz # use your entity IDs here
 - sensor.barbarastrasse # they might be different from mine

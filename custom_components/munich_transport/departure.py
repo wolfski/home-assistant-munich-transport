@@ -28,8 +28,7 @@ class Departure:
             line_type=source['product'],
             timestamp=timestamp,
             time="%s min" % source['departureTimeMinutes'],
-            direction=(source['destination'][:32] + '...') if len(source['destination']) > 32
-            else source['destination'],
+            direction=source['destination'],
             icon=line_visuals.get("icon") or DEFAULT_ICON,
             bg_color=source['lineBackgroundColor'],
             location=(0.0, 0.0),

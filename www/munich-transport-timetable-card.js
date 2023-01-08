@@ -15,6 +15,7 @@ class MunichTransportTimetableCard extends HTMLElement {
         const maxEntries = config.max_entries || 10;
         const showStopName = config.show_stop_name || true;
         const entityIds = config.entity ? [config.entity] : config.entities || [];
+        const directionMaxLen = config.direction_name_max_length || 30;
 
         let content = "";
 
@@ -28,12 +29,14 @@ class MunichTransportTimetableCard extends HTMLElement {
                 content += `<div class="stop">${entity.attributes.friendly_name}</div>`;
             }
 
-            const timetable = entity.attributes.departures.slice(0, maxEntries).map((departure) => 
+            const timetable = entity.attributes.departures.slice(0, maxEntries).map((departure) =>
                 `<div class="departure">
                     <div class="line">
                         <div class="line-icon" style="background-color: ${departure.color}">${departure.line_name}</div>
                     </div>
-                    <div class="direction">${departure.direction}</div>
+                    <div class="direction">${(departure.direction.length > directionMaxLen)
+                    ? departure.direction.slice(0, directionMaxLen - 3) + '...'
+                    : departure.direction}</div>
                     <div class="time">${departure.time}</div>
                 </div>`
             );
@@ -41,7 +44,7 @@ class MunichTransportTimetableCard extends HTMLElement {
             content += `<div class="departures">` + timetable.join("\n") + `</div>`;
         }
 
-       this.shadowRoot.getElementById('container').innerHTML = content;
+        this.shadowRoot.getElementById('container').innerHTML = content;
     }
 
     /* This is called only when config is updated */
@@ -54,7 +57,7 @@ class MunichTransportTimetableCard extends HTMLElement {
         const card = document.createElement('ha-card');
         const content = document.createElement('div');
         const style = document.createElement('style')
-  
+
         style.textContent = `
             .container {
                 padding: 10px;
@@ -107,7 +110,7 @@ class MunichTransportTimetableCard extends HTMLElement {
                 padding-right: 10px;
             }
         `;
-     
+
         content.id = "container";
         content.className = "container";
         card.header = config.title;
@@ -115,12 +118,12 @@ class MunichTransportTimetableCard extends HTMLElement {
         card.appendChild(content);
 
         root.appendChild(card);
-      }
-  
+    }
+
     // The height of the card.
     getCardSize() {
-      return 5;
+        return 5;
     }
 }
-  
+
 customElements.define('munich-transport-timetable-card', MunichTransportTimetableCard);

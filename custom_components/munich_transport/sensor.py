@@ -12,8 +12,8 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from .const import (
-    DOMAIN,
-    SCAN_INTERVAL,
+    DOMAIN,  # noqa
+    SCAN_INTERVAL,  # noqa
     CONF_DEPARTURES,
     CONF_DEPARTURES_WALKING_TIME,
     CONF_TYPE_BUS,
