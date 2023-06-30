@@ -31,7 +31,6 @@ sensor:
     departures:
       - name: "Hohenzollernplatz" # exact name of the station, used to find it
       - name: "Barbarastraße" # you can add more that one stop to track
-        
         # Optional parameter with value in minutes to hide transport sooner than N minutes
         # walking_time: 5
 ```

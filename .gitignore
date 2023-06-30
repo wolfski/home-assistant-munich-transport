@@ -132,3 +132,7 @@ dmypy.json
 
 # IDE
 .idea/
+
+# Local testing
+docker/
+docker.sh

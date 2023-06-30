@@ -20,17 +20,17 @@ class Departure:
 
     @classmethod
     def from_dict(cls, source):
-        line_visuals = TRANSPORT_TYPE_VISUALS.get(source['product']) or {}
-        timestamp = datetime.fromtimestamp(source['departureTime'] / 1000)
+        line_visuals = TRANSPORT_TYPE_VISUALS.get(source['type']) or {}
+        timestamp = datetime.fromtimestamp(source['time'])
         return cls(
-            trip_id=source["departureId"],
-            line_name=source['label'],
-            line_type=source['product'],
+            trip_id=source['line'] + '_' + str(source['planned']),
+            line_name=source['line'],
+            line_type=source['type'],
             timestamp=timestamp,
-            time="%s min" % source['departureTimeMinutes'],
+            time="%s min" % str(int((timestamp - datetime.now()).total_seconds() / 60)),
             direction=source['destination'],
             icon=line_visuals.get("icon") or DEFAULT_ICON,
-            bg_color=source['lineBackgroundColor'],
+            bg_color=line_visuals.get("color"),
             location=(0.0, 0.0),
         )
 

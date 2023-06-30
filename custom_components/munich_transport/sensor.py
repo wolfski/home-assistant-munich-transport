@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Optional
 
-import mvg_api
+from mvg import MvgApi, MvgApiError
 import voluptuous as vol
 
 from homeassistant.core import HomeAssistant
@@ -101,19 +101,22 @@ class TransportSensor(SensorEntity):
         self.departures = self.fetch_departures()
 
     def fetch_departures(self) -> Optional[list[Departure]]:
-        stop_id = mvg_api.get_id_for_station(self.station_name)
+        try:
+            station = MvgApi.station(self.station_name)
+        except MvgApiError as e:
+            _LOGGER.error("Could not find %s: %s" % (self.station_name, e))
+            return None
 
-        if stop_id is None:
-            _LOGGER.warning("Could not find %s" % self.station_name)
+        _LOGGER.debug(f"OK: station ID for {self.station_name}: {station}")
 
-        _LOGGER.debug(f"OK: station ID for {self.station_name}: {stop_id}")
+        mvg_api = MvgApi(station['id'])
+        departures = mvg_api.departures(
+            limit=20,
+            offset=self.walking_time,
+        )
+        departures = list(filter(lambda d: not bool(d['cancelled']), departures))
 
-        departures = mvg_api.get_departures(stop_id)
-        departures = list(
-            filter(lambda d: self.walking_time < int(d['departureTimeMinutes']) and not bool(d['cancelled']),
-                   departures))
-
-        _LOGGER.debug(f"OK: departures for {stop_id}: {departures}")
+        _LOGGER.debug(f"OK: departures for {station['name']}: {departures}")
 
         # convert api data into objects
         unsorted = [Departure.from_dict(departure) for departure in departures]
