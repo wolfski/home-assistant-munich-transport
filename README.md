@@ -6,13 +6,13 @@ Custom sensor component and lovelace card that displays upcoming departures from
 
 ## 🧑‍💻 Credits
 
-This widget was forked from [vas3k](https://github.com/vas3k)'s [repository](https://github.com/vas3k/home-assistant-berlin-transport) and adopted to work for Munich using [leftshift](https://github.com/leftshift)'s [library for MVG's API](https://github.com/leftshift/python_mvg_api).
+This widget was forked from [vas3k](https://github.com/vas3k)'s [repository](https://github.com/vas3k/home-assistant-berlin-transport) and adopted to work for Munich using [mondbaron](https://github.com/mondbaron)'s [library for MVG's API](https://github.com/mondbaron/mvg).
 
 ## 💿 Installation
 
 The component consists of two parts:
 
-1. A sensor, which tracks departures via [MVG public API](https://github.com/leftshift/python_mvg_api) every 90 seconds
+1. A sensor, which tracks departures via [MVG public API](https://github.com/mondbaron/mvg) every 90 seconds
 2. A widget (card) for the lovelace dashboard, which displays upcoming transport in a nice way
 
 We will look at the installation of each of them separately below.
