@@ -16,40 +16,31 @@ from .const import (
     SCAN_INTERVAL,  # noqa
     CONF_DEPARTURES,
     CONF_DEPARTURES_WALKING_TIME,
-    CONF_TYPE_BUS,
-    CONF_TYPE_SUBURBAN,
-    CONF_TYPE_SUBWAY,
-    CONF_TYPE_TRAM,
     CONF_DEPARTURES_NAME,
+    CONF_DEPARTURES_STATION,
     CONF_DEPARTURES_DIRECTIONS,
     CONF_DEPARTURES_LINES,
+    CONF_DEPARTURES_TYPES,
     DEFAULT_ICON,
 )
 from .departure import Departure
 
 _LOGGER = logging.getLogger(__name__)
 
-TRANSPORT_TYPES_SCHEMA = {
-    vol.Optional(CONF_TYPE_SUBURBAN, default=True): bool,
-    vol.Optional(CONF_TYPE_SUBWAY, default=True): bool,
-    vol.Optional(CONF_TYPE_TRAM, default=True): bool,
-    vol.Optional(CONF_TYPE_BUS, default=True): bool,
-}
-
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Optional(CONF_DEPARTURES): [
             {
                 vol.Required(CONF_DEPARTURES_NAME): str,
+                vol.Required(CONF_DEPARTURES_STATION): str,
                 vol.Optional(CONF_DEPARTURES_WALKING_TIME, default=1): int,
                 vol.Optional(CONF_DEPARTURES_LINES, default=[]): [str],
+                vol.Optional(CONF_DEPARTURES_TYPES, default=[]): [str],
                 vol.Optional(CONF_DEPARTURES_DIRECTIONS): [str],
-                **TRANSPORT_TYPES_SCHEMA,
             }
         ]
     }
 )
-
 
 async def async_setup_platform(
         hass: HomeAssistant,
@@ -69,17 +60,20 @@ class TransportSensor(SensorEntity):
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
         self.hass: HomeAssistant = hass
         self.config: dict = config
-        self.station_name: str = config.get(CONF_DEPARTURES_NAME)
+        self.sensor_name: str = config.get(CONF_DEPARTURES_NAME)
+        self.station_name: str = config.get(CONF_DEPARTURES_STATION)
         # we add +1 minute anyway to delete the "just gone" transport
         self.walking_time: int = config.get(CONF_DEPARTURES_WALKING_TIME) or 1
         # If configured allow only the specified line, else allow all lines
         self.lines: str = config.get(CONF_DEPARTURES_LINES) or []
+        # If configured allow only the specified types, else allow all types
+        self.types: str = config.get(CONF_DEPARTURES_TYPES) or []
         # If configured allow only the specified directions, else allow all directions
         self.directions: str = config.get(CONF_DEPARTURES_DIRECTIONS) or None
 
     @property
     def name(self) -> str:
-        return self.station_name
+        return self.sensor_name
 
     @property
     def icon(self) -> str:
@@ -87,16 +81,23 @@ class TransportSensor(SensorEntity):
         if next_departure:
             return next_departure.icon
         return DEFAULT_ICON
-
+    
+    @property
+    def line_code(self) -> str:
+        next_departure = self.next_departure()
+        if next_departure:
+            return next_departure.line_code
+        return ""
+    
     @property
     def unique_id(self) -> str:
-        return f"stop_{self.station_name}_departures"
+        return f"stop_{self.sensor_name}_departures"
 
     @property
     def state(self) -> str:
         next_departure = self.next_departure()
         if next_departure:
-                return f"Next {next_departure.line_name}, {next_departure.direction} at {next_departure.time}"
+                return f"Next {next_departure.line_name}, {next_departure.direction} at {next_departure.departure_time}"
         return "N/A"
 
     @property
@@ -119,7 +120,7 @@ class TransportSensor(SensorEntity):
 
         mvg_api = MvgApi(station['id'])
         departures = mvg_api.departures(
-            limit=30,
+            limit=60,
             offset=self.walking_time,
         )
         departures = list(filter(lambda d: not bool(d['cancelled']), departures))
@@ -134,7 +135,8 @@ class TransportSensor(SensorEntity):
         for departure in unsorted:
             if (
                 (not self.lines or departure.line_name in self.lines) and
-                (not self.directions or departure.direction in self.directions)
+                (not self.directions or departure.direction in self.directions) and
+                (not self.types or departure.line_type in self.types)
             ):
                 filtered_departures.append(departure)
 
