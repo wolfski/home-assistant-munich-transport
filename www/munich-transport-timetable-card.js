@@ -28,9 +28,6 @@ class MunichTransportTimetableCard extends HTMLElement {
             if (showStopName) {
                 content += `<div class="stop">${entity.attributes.friendly_name}</div>`;
             }
-            /*
-                    <div class="line-icon" style="background-color: ${departure.color}">${departure.line_name}</div>
-             */
             const timetable = entity.attributes.departures.slice(0, maxEntries).map((departure) =>
                 `<div class="departure">
                     <div class="line">
