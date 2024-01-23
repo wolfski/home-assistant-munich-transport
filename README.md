@@ -29,18 +29,30 @@ We will look at the installation of each of them separately below.
 sensor:
   - platform: munich_transport
     departures:
-      - name: "Hohenzollernplatz" # exact name of the station, used to find it
-      - name: "Barbarastraße" # you can add more that one stop to track
-        # Optional parameter with value in minutes to hide transport sooner than N minutes
-        walking_time: 5
+
+      - name: "Harras" # name of the sensor
+        station: "Harras" # exact name of the station, used to find it
         # Optional parameter with direction as a string to hide unwanted directions
-        directions: "Romanplatz"
-      - name: "Harras"
-        # Example for multiple directions
         directions: ["Klinikum Großhadern", "Fröttmanning"]
-      - name: "Ostbahnhof Muenchen"
+
+      - name: "Ostbahnhof"
+        station: "Ostbahnhof Muenchen"
         # Example for multiple Lines
-        lines: ["S8", "S2"]
+        lines: ["S8", "S2"] # optional list of lines to be included in sensor
+
+      - name: "Stachus"
+        station: "Karlsplatz"
+
+      - name: "Laim (Work)" 
+        station: "Laim" 
+        lines ["S1"]
+        directions: ["Flughafen München", "Freising", "Flughafen Besucherpark"]
+
+      - name: "Laim (S-Bahn)"
+        station: "Laim"
+        types: ["S-Bahn"] # optional: include only these means of transportation (any of S-Bahn, U-Bahn, Tram, Bus)
+        # Optional parameter with value in minutes to hide transport sooner than N minutes
+        walking_time: 10
 ```
 
 **4.** Restart Home Assistant core again and you should now see two new entities (however, it may take some time for them to fetch new data). If you don't see anything new — check the logs (Settings -> System -> Logs). Some error should pop up there.
