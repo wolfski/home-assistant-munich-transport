@@ -60,6 +60,7 @@ class MunichTransportTimetableCard extends HTMLElement {
         const style = document.createElement('style')
 
         style.textContent = `
+
             .container {
                 padding: 10px;
                 font-size: 130%;
@@ -79,16 +80,18 @@ class MunichTransportTimetableCard extends HTMLElement {
                 padding-bottom: 20px;
             }
             .departure {
+                width: 100%;
                 padding-top: 10px;
                 display: flex;
                 flex-direction: row;
                 flex-wrap: nowrap;
                 align-items: flex-start;
-                gap: 20px;
+                justify-content: space-between;
+                gap: 10px;
             }
             .line {
                 min-width: 70px;
-                text-align: right;
+                text-align: center;
             }
             .line-icon {
                 display: inline-block;
@@ -98,11 +101,26 @@ class MunichTransportTimetableCard extends HTMLElement {
                 line-height: 1em;
                 color: #FFFFFF;
                 background-color: #FF6666;
-                text-align: center;
+            }
+            .direction {
+                //align-self: center;
+                flex-grow: 1;
+                line-height: 2em;
+            }
+            .time {
+                //allign-self: left;
+                //text-align: left;
+                font-weight: 700;
+                line-height: 2em;
+            }
+            .departure_time {
+                font-weight: 700;
+                line-height: 2em;
             }
 
             .S {
                 border-radius: 20px;
+                //border: 1px solid;
             }
             .U {
                 border-radius: 5px;
@@ -114,7 +132,7 @@ class MunichTransportTimetableCard extends HTMLElement {
                 border-radius: 0px;
                 background-color: #3300CC;
                 color: #FFFFFF;
-                border: 1px solid #FFFFFF;
+                border: 2px solid #FFFFFF;
             }
 
             .U_U1 {
@@ -163,6 +181,7 @@ class MunichTransportTimetableCard extends HTMLElement {
             .S_S8 {
                 background-color: #000000;
                 color: #FFCB01;
+                //border: 2px solid;
             }
             .S_S20 {
                 background-color: #FF3366;
@@ -226,25 +245,7 @@ class MunichTransportTimetableCard extends HTMLElement {
                 background-color: #656565;
                 color: #FDEE00; 
             }
-
-            .direction {
-                align-self: center;
-                flex-grow: 1;
-            }
-            .time {
-                align-self: flex-start;
-                font-weight: 700;
-                line-height: 2em;
-                padding-right: 10px;
-            }
-            .departure_time {
-                align-self: center;
-                font-weight: 700;
-                line-height: 2em;
-                padding-right: 10px;
-            }
         `;
-
         content.id = "container";
         content.className = "container";
         card.header = config.title;
